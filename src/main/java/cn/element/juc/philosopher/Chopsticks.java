@@ -1,34 +1,19 @@
 package cn.element.juc.philosopher;
 
-public class Chopsticks {
+import java.util.concurrent.locks.ReentrantLock;
 
-    private final boolean[] captured = new boolean[5];
+public class Chopsticks extends ReentrantLock {
 
-    public synchronized void takeStick(Philosopher philosopher) {
+    private String name;
 
-        Integer i = philosopher.getIndex();
-
-        while (captured[i] || captured[(i + 1) % 5]) {
-            try {
-                wait();  //如果拿不到筷子,那么就一直陷入阻塞状态
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
-        captured[i] = true;
-        captured[(i + 1) % 5] = true;
+    public Chopsticks(String name) {
+        this.name = name;
     }
 
-    public synchronized void putStick(Philosopher philosopher) {
-
-        Integer i = philosopher.getIndex();
-
-        captured[i] = false;
-        captured[(i + 1) % 5] = false;
-
-        notifyAll();  //放下筷子后叫醒其他哲学家
+    @Override
+    public String toString() {
+        return "Chopsticks{" +
+                "name='" + name + '\'' +
+                '}';
     }
-
-
 }

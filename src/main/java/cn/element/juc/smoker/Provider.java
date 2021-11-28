@@ -6,7 +6,6 @@ package cn.element.juc.smoker;
 public class Provider extends Thread {
 
     private final Table table;
-    private int count = 0;
 
     public Provider(Table table) {
         this.table = table;
