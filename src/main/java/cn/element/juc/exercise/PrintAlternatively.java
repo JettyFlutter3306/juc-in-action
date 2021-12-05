@@ -3,6 +3,7 @@ package cn.element.juc.exercise;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.LockSupport;
 import java.util.concurrent.locks.ReentrantLock;
 
 /**
@@ -79,6 +80,24 @@ public class PrintAlternatively {
         }
     }
 
+    private static class ParkUnPark {
+        private final int loopNumber;
+
+        public ParkUnPark(int loopNumber) {
+            this.loopNumber = loopNumber;
+        }
+
+        public void print(String str, Thread next) {
+            for (int i = 0; i < loopNumber; i++) {
+                LockSupport.park();
+
+                System.out.print(str);
+
+                LockSupport.unpark(next);
+            }
+        }
+    }
+
     /**
      * 使用 wait-notify 设计范式
      */
@@ -122,18 +141,36 @@ public class PrintAlternatively {
         }
     }
 
+    private static Thread t1;
+    private static Thread t2;
+    private static Thread t3;
     /**
      * 使用LockSupport设计范式
+     * 使用park() 和 unpark()方法
      */
-    public void synchronizedPrintByLockSupport() {
+    public static void synchronizedPrintByLockSupport() {
+        ParkUnPark pu = new ParkUnPark(5);
 
+        t1 = new Thread(() -> pu.print("a", t2), "t1");
+        t2 = new Thread(() -> pu.print("b", t3), "t2");
+        t3 = new Thread(() -> pu.print("c", t1), "t3");
+
+        t1.start();
+        t2.start();
+        t3.start();
+
+        //唤醒线程t1
+        LockSupport.unpark(t1);
     }
 
     public static void main(String[] args) {
         PrintAlternatively pa = new PrintAlternatively();
 
 //        pa.synchronizedPrintByNotify();
-        pa.synchronizedPrintByReentrantLock();
+//        pa.synchronizedPrintByReentrantLock();
+
+        synchronizedPrintByLockSupport();
+
     }
 
 
