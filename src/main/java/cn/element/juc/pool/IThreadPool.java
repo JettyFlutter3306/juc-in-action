@@ -7,7 +7,7 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j(topic = "c.IThreadPool")
-class IThreadPool {
+public class IThreadPool {
 
     //任务队列
     private final IBlockingQueue<Runnable> tasksQueue;

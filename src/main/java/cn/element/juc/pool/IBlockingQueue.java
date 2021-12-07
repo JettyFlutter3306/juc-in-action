@@ -9,7 +9,7 @@ import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
 
 @Slf4j(topic = "c.IBlockingQueue")
-class IBlockingQueue<T> {
+public class IBlockingQueue<T> {
 
     //1.任务队列
     private final Deque<T> queue = new ArrayDeque<>();

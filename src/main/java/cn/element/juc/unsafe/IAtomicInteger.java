@@ -58,9 +58,3 @@ public class IAtomicInteger implements Account {
     }
 }
 
-interface Account {
-
-    Integer getBalance();
-
-    void withdraw(Integer amount);
-}
